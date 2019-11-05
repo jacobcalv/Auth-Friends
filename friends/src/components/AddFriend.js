@@ -1,12 +1,12 @@
 import React, { useState } from "react"
 import api from './utils/api'
-import {getToken} from './utils/api'
 
-function Login(props) {
+function AddFriend(props) {
     const [error, setError] = useState()
     const [data, setData] = useState({
-        username: '',
-        password: '',
+        name: '',
+        age: '',
+        email: '',
     })
 
     const handleChange = (event) => {
@@ -18,31 +18,29 @@ function Login(props) {
     
 	const handleSubmit = (event) => {
         event.preventDefault()
-        
+        const token = localStorage.getItem('token')
 		api()
-			.post("/api/login", data)
+			.post("/api/friends", data)
 			.then(result => {
-				localStorage.setItem("token", result.data.payload)
 				console.log(result.data)
 				props.history.push("/friends")
-				getToken()
 			})
 			.catch(err => {
 				setError(err.response.data.message)
 			})
-			getToken()
     }
     
     return (
 		<form onSubmit={handleSubmit}>
 			{error && <div className="error">{error}</div>}
 
-			<input type='text' name="username" placeholder="Username" value={data.username} onChange={handleChange} />
-			<input type="password" name="password" placeholder="Password" value={data.password} onChange={handleChange} />
+			<input type='text' name="name" placeholder="Name" value={data.name} onChange={handleChange} />
+            <input type='text' name="age" placeholder="age" value={data.age} onChange={handleChange} />
+			<input type="email" name="email" placeholder="email" value={data.email} onChange={handleChange} />
 
-			<button type="submit">Sign In</button>
+			<button type="submit">Add Friend</button>
 		</form>
 	)
 }
 
-export default Login
+export default AddFriend
